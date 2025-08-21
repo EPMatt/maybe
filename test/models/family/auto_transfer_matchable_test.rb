@@ -28,25 +28,25 @@ class Family::AutoTransferMatchableTest < ActiveSupport::TestCase
       @family.auto_match_transfers!
     end
 
-    # test match within lower 10% bound
+    # test match within lower 50% bound (rate 1.39 → expected ~1390 CAD)
     create_transaction(date: 1.day.ago.to_date, account: @depository, amount: 1000)
-    create_transaction(date: Date.current, account: @credit_card, amount: -1330, currency: "CAD")
+    create_transaction(date: Date.current, account: @credit_card, amount: -700, currency: "CAD")
 
     assert_difference -> { Transfer.count } => 1 do
       @family.auto_match_transfers!
     end
 
-    # test match within upper 10% bound
-    create_transaction(date: 1.day.ago.to_date, account: @depository, amount: 1500)
-    create_transaction(date: Date.current, account: @credit_card, amount: -2189, currency: "CAD")
+    # test match within upper 50% bound
+    create_transaction(date: 1.day.ago.to_date, account: @depository, amount: 1000)
+    create_transaction(date: Date.current, account: @credit_card, amount: -2000, currency: "CAD")
 
     assert_difference -> { Transfer.count } => 1 do
       @family.auto_match_transfers!
     end
 
-    # test no match outside of slippage tolerance
+    # test no match outside of slippage tolerance (ratio ~1.58, above 1.5 upper bound)
     create_transaction(date: 1.day.ago.to_date, account: @depository, amount: 1000)
-    create_transaction(date: Date.current, account: @credit_card, amount: -1250, currency: "CAD")
+    create_transaction(date: Date.current, account: @credit_card, amount: -2200, currency: "CAD")
 
     assert_difference -> { Transfer.count } => 0 do
       @family.auto_match_transfers!

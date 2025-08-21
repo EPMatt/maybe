@@ -1,7 +1,7 @@
 module Family::AutoTransferMatchable
   def transfer_match_candidates(
     date_window: 4,
-    exchange_rate_tolerance: 0.1,
+    exchange_rate_tolerance: 0.5,
     inflow_transaction_id: nil,
     outflow_transaction_id: nil,
     include_rejected: true
