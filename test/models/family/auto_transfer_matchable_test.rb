@@ -46,7 +46,7 @@ class Family::AutoTransferMatchableTest < ActiveSupport::TestCase
 
     # test no match outside of slippage tolerance (ratio ~1.58, above 1.5 upper bound)
     create_transaction(date: 1.day.ago.to_date, account: @depository, amount: 1000)
-    create_transaction(date: Date.current, account: @credit_card, amount: -2200, currency: "CAD")
+    create_transaction(date: Date.current, account: @credit_card, amount: -1600, currency: "CAD")
 
     assert_difference -> { Transfer.count } => 0 do
       @family.auto_match_transfers!
